@@ -1,0 +1,63 @@
+import math
+
+class FieldElement:
+
+    def __init__(self, num, prime):
+        if (not self.is_prime(prime)):
+            error = 'Num {} is not a prime'.format(prime)
+            raise ValueError(error)
+        
+        if num >= prime or num < 0:
+            error = 'Num {} not in field range 0 to {}'.format(num, prime - 1)
+            raise ValueError(error)
+        
+        self.num = num
+        self.prime = prime
+
+    def __repr__(self):
+        return 'Field Element_{}({})'.format(self.prime, self.num)
+
+    def __eq__(self, other):
+        if other is None:
+            return False
+        return self.num == other.num and self.prime == other.prime
+
+    def __ne__(self, other):
+        if other is None:
+            return True
+        return self.num != other.num or self.prime != other.prime
+
+    @staticmethod
+    def is_prime(num):
+        if num <= 1 :
+            return False
+        
+        for i in range(2, math.isqrt(num) + 1):
+            if num % i == 0:
+                return False
+        return True
+
+    def __add__(self, other):
+        if self.prime != other.prime:
+            error = 'Cannot add two elements from different fields.'
+            raise ValueError(error)
+
+        return self.__class__((self.num + other.num) % self.prime, self.prime)
+
+    def __sub__(self, other):
+        if self.prime != other.prime:
+            error = 'Cannot subtract two elements from different fields.'
+            raise ValueError(error)
+
+        return self.__class__((self.num - other.num + self.prime) % self.prime, self.prime)
+
+    def __mul__(self, other):
+        if self.prime != other.prime:
+            error = 'Cannot multiply two elements from different fields.'
+            raise ValueError(error)
+
+        return self.__class__((self.num * other.num) % self.prime, self.prime)
+    
+
+    
+
